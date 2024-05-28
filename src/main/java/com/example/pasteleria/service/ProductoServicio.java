@@ -10,6 +10,10 @@ import com.example.pasteleria.repository.ProductoRepositorio;
 import com.example.pasteleria.response.ProductoResponse;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,9 @@ public class ProductoServicio {
     private final CarByClienteRepositorio carByClienteRepositorio;
     private final StripeServicio stripeServicio;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public ProductoServicio(ProductoRepositorio productoRepositorio, CategoriaRepositorio categoriaRepositorio, CarByClienteRepositorio carByClienteRepositorio, StripeServicio stripeServicio) {
         this.productoRepositorio = productoRepositorio;
         this.categoriaRepositorio = categoriaRepositorio;
@@ -32,6 +39,13 @@ public class ProductoServicio {
         this.stripeServicio = stripeServicio;
     }
 
+    @Transactional
+    public void deleteCarsByCliente(Long clientId) {
+        entityManager.createStoredProcedureQuery("delete_car_by_cliente")
+                .registerStoredProcedureParameter(1, Long.class, ParameterMode.IN)
+                .setParameter(1, clientId)
+                .execute();
+    }
 
     public void eliminarProducto(long id) {
         productoRepositorio.deleteById(id);

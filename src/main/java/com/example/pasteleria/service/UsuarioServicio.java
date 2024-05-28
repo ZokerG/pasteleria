@@ -98,7 +98,6 @@ public class UsuarioServicio {
     }
 
     public Usuarios crearUsuarios(CrearUsuarioRequest request){
-        System.out.println(request.toString());
         if (usuarioRepositorio.existsByEmail(request.getEmail())) {
             throw new BenfitException(i18NService.getMessage(ErrorMessages.EMAIL_ALREADY_EXISTS));
         }
@@ -110,6 +109,7 @@ public class UsuarioServicio {
         Usuarios user = new Usuarios();
         user.setNombre(request.getNombre());
         user.setEmail(request.getEmail());
+        user.setApellido(request.getApellido());
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         user.setActivo(true);
         user.setRol(request.getRol());

@@ -6,6 +6,7 @@ import com.example.pasteleria.response.ProductoResponse;
 import com.example.pasteleria.service.ProductoServicio;
 import com.stripe.exception.StripeException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,12 @@ public class ProductoControlador {
     @ResponseStatus(HttpStatus.OK)
     public List<Producto> listarProductosPorCategoria(@PathVariable long categoriaId){
         return productoServicio.obtenerProductosPorCategoria(categoriaId);
+    }
+
+    @DeleteMapping("/car/{clienteId}")
+    public ResponseEntity<?> deleteCarsByCliente(@PathVariable Long clienteId) {
+        productoServicio.deleteCarsByCliente(clienteId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
